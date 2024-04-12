@@ -19,7 +19,7 @@ func raceTasks[T any](tasks []func() T, k int, rch chan<- []T) {
 }
 
 func taskChannel[T any](ch chan<- T, t func() T) {
-	defer recover()
+	defer func() { recover() }()
 	r := t()
 	ch <- r
 }
