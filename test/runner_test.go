@@ -31,6 +31,27 @@ func TestFrontRunner_First(t *testing.T) {
 			t.Fatalf("res should be %v, was %v", exp, act)
 		}
 	})
+
+	t.Run("Should appropriately handle panic cases and not return empty value", func(t *testing.T) {
+		for i := range 1000 {
+			exp := i + 1
+			task := func() int {
+				return exp
+			}
+			taskPanic := func() int {
+				panic("This is panic")
+			}
+			r := runner.NewRunner(taskPanic, task)
+			act, err := r.First()
+			if err != nil {
+				t.Fatalf("error should be nil, was %v", err)
+			}
+
+			if act != exp {
+				t.Fatalf("res should be %v, was %v", exp, act)
+			}
+		}
+	})
 }
 
 func TestFrontRunner_FirstK(t *testing.T) {
